@@ -16,6 +16,18 @@
 
 html { scroll-behavior: smooth; }
 
+html:has(.home-scroll-snap) { scroll-snap-type: y mandatory; }
+
+.home-scroll-snap > section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+body:has(.contact-page) > header,
+body:has(.contact-page) > footer {
+  display: none;
+}
+
 body {
   margin: 0;
   background: var(--background);

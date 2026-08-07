@@ -6,8 +6,8 @@ export default function HomePage() {
   const featuredEra = eras[0];
   const featuredProject = featuredEra.projects[0];
 
-  return <>
+  return <div className="home-scroll-snap">
     <LandingHero eras={eras} heroImage={featuredProject.thumbnail} />
     <HeroWork era={featuredEra} project={featuredProject} />
-  </>;
+  </div>;
 }
