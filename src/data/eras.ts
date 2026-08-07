@@ -1,6 +1,6 @@
 import type { Era } from "@/types/archive";
 
-const placeholder = "/images/projects/placeholder.svg";
+const placeholder = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/projects/placeholder.svg`;
 
 export const eras: Era[] = [
   {
