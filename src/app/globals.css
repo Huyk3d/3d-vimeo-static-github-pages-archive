@@ -1,0 +1,62 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f7f7f5;
+  --surface: #ffffff;
+  --text: #111111;
+  --muted: #6b7280;
+  --border: #dadada;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font-family: "IBM Plex Mono", "Courier New", monospace;
+}
+
+a { color: inherit; text-decoration: none; }
+
+button, input, textarea, select { font: inherit; }
+
+@keyframes greeting {
+  0%, 8% { opacity: 0; transform: translateY(0.35rem); }
+  20%, 65% { opacity: 1; transform: translateY(0); }
+  82%, 100% { opacity: 0; transform: translateY(-0.35rem); }
+}
+
+@keyframes introduction {
+  0%, 65% { opacity: 0; transform: translateY(0.5rem); }
+  85%, 100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes landing-message {
+  0% { opacity: 0; transform: translateY(0.35rem); }
+  16%, 72% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-0.35rem); }
+}
+
+@keyframes scroll-cue {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(0.8rem); }
+}
+
+.animate-greeting { animation: greeting 2.8s ease-in-out forwards; }
+.animate-introduction { animation: introduction 2.8s ease-out forwards; }
+.animate-landing-message { animation: landing-message 2.2s ease-in-out forwards; }
+.animate-scroll-cue { animation: scroll-cue 1.8s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .animate-greeting, .animate-introduction, .animate-landing-message, .animate-scroll-cue { animation: none; }
+  .animate-greeting { display: none; }
+  .animate-introduction { opacity: 1; }
+}
