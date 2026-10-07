@@ -1,16 +1,35 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { CategoryGallery } from "@/components/era/CategoryGallery";
+import { StudentGallery } from "@/components/era/StudentGallery";
+import { Vdas02Gallery } from "@/components/era/Vdas02Gallery";
+import { VdasGallery } from "@/components/era/VdasGallery";
 import { HorizontalGallery } from "@/components/project/HorizontalGallery";
 import { eras } from "@/data/eras";
 import { getEra } from "@/lib/archive";
 
 export function generateStaticParams() {
-  return eras.map((era) => ({ slug: era.slug }));
+  return [...eras.map((era) => ({ slug: era.slug })), { slug: "when-student-02" }];
 }
 
 export default function EraPage({ params }: { params: { slug: string } }) {
+  if (params.slug === "when-student-02") {
+    redirect("/era/vdas-01");
+  }
+
   const era = getEra(params.slug);
   if (!era) notFound();
+
+  if (era.slug === "when-student-01") {
+    return <StudentGallery />;
+  }
+
+  if (era.slug === "vdas-01") {
+    return <VdasGallery />;
+  }
+
+  if (era.slug === "vdas-02") {
+    return <Vdas02Gallery />;
+  }
 
   return (
     <section className="py-12 md:py-20">

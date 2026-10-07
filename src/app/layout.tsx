@@ -4,7 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 
 export const metadata: Metadata = {
-  title: "Archive",
+  title: "HYUK",
   description: "A motion design archive.",
 };
 

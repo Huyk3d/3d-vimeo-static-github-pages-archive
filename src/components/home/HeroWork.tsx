@@ -1,16 +1,19 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { Era, Project } from "@/types/archive";
 
 export function HeroWork({ era, project }: { era: Era; project: Project }) {
   return (
     <section id="hero-work" className="scroll-mt-[-8vh] bg-[#EDEDED] px-0 py-0">
       <div className="w-full">
-        <Link href={`/era/${era.slug}/project/${project.slug}`} className="group block">
-          <div className="relative aspect-video w-full overflow-hidden bg-[#EDEDED]">
-            <Image src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/Main/hero_01.png`} alt="" fill priority sizes="100vw" className="object-cover object-center" />
-          </div>
-        </Link>
+        <div className="relative aspect-video w-full overflow-hidden bg-[#EDEDED]">
+          <iframe
+            src="https://player.vimeo.com/video/1233663036?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0&badge=0&vimeo_logo=0"
+            title="Hero Work 01 video"
+            className="pointer-events-none absolute inset-0 h-full w-full border-0"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
         <div id="hero-work-02" className="relative aspect-video w-full snap-start snap-always scroll-mt-0 overflow-hidden bg-[#EDEDED]">
           <Image src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/Main/hero_02.png`} alt="" fill sizes="100vw" className="scale-105 object-cover object-center brightness-[0.6] saturate-125 blur-[13px]" />
           <div className="absolute inset-0 bg-black/60" />

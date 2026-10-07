@@ -6,6 +6,12 @@ import type { Era } from "@/types/archive";
 
 type LandingPhase = "blank" | "greeting" | "introduction" | "eras";
 
+const landingEraLabels: Record<string, string> = {
+  "when-student-01": "Student",
+  "vdas-01": "VDAS_01",
+  "vdas-02": "VDAS_02",
+};
+
 export function LandingHero({ eras, heroImage }: { eras: Era[]; heroImage: string }) {
   const [phase, setPhase] = useState<LandingPhase>("blank");
   const introTimers = useRef<number[]>([]);
@@ -47,18 +53,18 @@ export function LandingHero({ eras, heroImage }: { eras: Era[]; heroImage: strin
     <section className="relative flex min-h-[100svh] flex-col overflow-visible bg-[#EDEDED] px-6 pb-16 pt-16 md:px-10 md:pb-20 md:pt-24">
       <div className="relative mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center text-center">
         {phase !== "eras" && <div className="relative flex min-h-28 w-full translate-y-14 items-center justify-center md:min-h-36">
-          {phase === "greeting" && <p className="animate-landing-message text-3xl font-medium tracking-tight md:text-4xl">Hello, Hyuk!</p>}
+          {phase === "greeting" && <p className="animate-landing-message text-xl font-medium tracking-tight md:text-2xl">Hello, Hyuk!</p>}
           {phase === "introduction" && (
             <div className="animate-landing-message">
-              <h1 className="text-3xl font-medium leading-[1.05] tracking-tight md:text-5xl">Welcome to<br />A personal archive.</h1>
+              <h1 className="text-xl font-medium leading-[1.05] tracking-tight md:text-3xl">Welcome to<br />A personal archive.</h1>
             </div>
           )}
         </div>}
 
-        <nav aria-label="Archive eras" className={`grid -translate-y-7 justify-items-center gap-2 text-base transition-opacity duration-700 md:text-lg ${phase === "eras" ? "opacity-100" : "pointer-events-none mt-10 opacity-0 md:mt-14"}`}>
+        <nav aria-label="Archive eras" className={`grid -translate-y-7 justify-items-center gap-2 text-sm transition-opacity duration-700 md:text-base ${phase === "eras" ? "opacity-100" : "pointer-events-none mt-10 opacity-0 md:mt-14"}`}>
           {eras.map((era) => (
             <Link key={era.slug} href={`/era/${era.slug}`} className="group py-1 text-archive-text transition-colors hover:text-archive-text">
-              <span>{era.title}</span>
+              <span>{landingEraLabels[era.slug] ?? era.title}</span>
             </Link>
           ))}
           <Link href="/contact" className="group py-1 text-archive-text transition-colors hover:text-archive-text">Contact</Link>

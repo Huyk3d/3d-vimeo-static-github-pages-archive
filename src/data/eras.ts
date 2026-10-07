@@ -31,8 +31,8 @@ export const eras: Era[] = [
     ],
   },
   {
-    slug: "when-student-02",
-    title: "When Student 02",
+    slug: "vdas-01",
+    title: "VDAS 01",
     period: "2022 — 2023",
     description: "A categorized record of selected student projects.",
     categories: ["FD", "IT", "MD"],
@@ -56,5 +56,12 @@ export const eras: Era[] = [
         blocks: [{ type: "text", heading: "Aesop", body: "Project details will be added here." }],
       },
     ],
+  },
+  {
+    slug: "vdas-02",
+    title: "VDAS 02",
+    period: "2024 — 2025",
+    description: "An independent archive for the next set of motion studies.",
+    projects: [],
   },
 ];
