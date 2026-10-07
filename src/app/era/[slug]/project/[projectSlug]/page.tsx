@@ -5,6 +5,7 @@ import { Vdas02ProjectIntro } from "@/components/project/Vdas02ProjectIntro";
 import { Vdas01Project02Intro } from "@/components/project/Vdas01Project02Intro";
 import { Vdas01Project03Intro } from "@/components/project/Vdas01Project03Intro";
 import { VdasProjectIntro } from "@/components/project/VdasProjectIntro";
+import { StudentProjectIntro } from "@/components/project/StudentProjectIntro";
 import { eras } from "@/data/eras";
 import { getEra, getProject } from "@/lib/archive";
 
@@ -15,6 +16,7 @@ export function generateStaticParams() {
     { slug: "vdas-01", projectSlug: "vdas-01-02" },
     { slug: "vdas-01", projectSlug: "vdas-01-03" },
     { slug: "vdas-02", projectSlug: "vdas-02-01" },
+    { slug: "when-student-01", projectSlug: "student-01" },
     { slug: "when-student-02", projectSlug: "vdas-01-01" },
   ];
 }
@@ -38,6 +40,10 @@ export default function ProjectPage({ params }: { params: { slug: string; projec
 
   if (params.slug === "vdas-02" && params.projectSlug === "vdas-02-01") {
     return <Vdas02ProjectIntro />;
+  }
+
+  if (params.slug === "when-student-01" && params.projectSlug === "student-01") {
+    return <StudentProjectIntro />;
   }
 
   const era = getEra(params.slug);
