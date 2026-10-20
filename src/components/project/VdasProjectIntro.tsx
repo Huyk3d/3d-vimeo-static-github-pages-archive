@@ -6,11 +6,11 @@ const imageBasePath = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/project
 
 function ProjectImage({ number, className = "" }: { number: string; className?: string }) {
   return (
-    <div className={`overflow-hidden bg-black ${className}`}>
+    <div className={`group overflow-hidden bg-black ${className}`}>
       <img
         src={`${imageBasePath}/Vdas_01_01-${number}.png`}
         alt={`Foundation Study 01 image ${number}`}
-        className="h-full w-full object-contain"
+        className="h-full w-full object-contain transition-transform duration-[500ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.025] group-hover:duration-[2000ms]"
       />
     </div>
   );

@@ -8,10 +8,12 @@ export const metadata: Metadata = {
   description: "A motion design archive.",
 };
 
+const siteCursor = `url("${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/cursors/landing-arrow.svg") 2 2, auto`;
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>
+      <body style={{ cursor: siteCursor }}>
         <Header />
         <main>{children}</main>
         <Footer />

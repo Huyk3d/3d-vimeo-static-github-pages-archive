@@ -11,7 +11,7 @@ export function ProjectDetail({ project }: { project: Project }) {
       </header>
       <div className="space-y-10">
         {project.blocks.map((block, index) => {
-          if (block.type === "image") return <figure key={index}><Image src={block.src} alt={block.alt} width={1600} height={1200} className="h-auto w-full" />{block.caption && <figcaption className="mt-2 text-sm text-archive-muted">{block.caption}</figcaption>}</figure>;
+          if (block.type === "image") return <figure key={index} className="group overflow-hidden"><Image src={block.src} alt={block.alt} width={1600} height={1200} className="h-auto w-full transition-transform duration-[500ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.025] group-hover:duration-[2000ms]" />{block.caption && <figcaption className="mt-2 text-sm text-archive-muted">{block.caption}</figcaption>}</figure>;
           if (block.type === "vimeo") return <VimeoEmbed key={index} videoId={block.videoId} title={block.title} />;
           return <section key={index} className="max-w-2xl">{block.heading && <h2 className="mb-3 text-xl font-bold">{block.heading}</h2>}<p className="leading-7 text-archive-muted">{block.body}</p></section>;
         })}
