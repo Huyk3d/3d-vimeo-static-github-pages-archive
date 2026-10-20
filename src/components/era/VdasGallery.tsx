@@ -18,7 +18,7 @@ function ThumbnailWork({ className = "" }: { className?: string }) {
 
   return (
     <div className={`relative flex items-center justify-center overflow-hidden bg-black text-sm text-white ${className}`}>
-      <img src={imageSrc} alt="Foundation Study 01 thumbnail" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.035] group-hover:duration-[1600ms]" />
+      <img src={imageSrc} alt="Foundation Study 01 thumbnail" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.015] group-hover:duration-[1900ms]" />
       <p className="absolute bottom-5 left-5 z-10 text-xs text-white md:bottom-6 md:left-6">Balmuda Rain</p>
     </div>
   );
@@ -29,7 +29,7 @@ function ArtworkThumbnail({ className = "" }: { className?: string }) {
 
   return (
     <div className={`relative flex items-center justify-center overflow-hidden bg-black text-sm text-white ${className}`}>
-      <img src={imageSrc} alt="Foundation Study 02 thumbnail" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.035] group-hover:duration-[1600ms]" />
+      <img src={imageSrc} alt="Foundation Study 02 thumbnail" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.015] group-hover:duration-[1900ms]" />
       <p className="absolute bottom-5 left-5 z-10 text-xs text-white md:bottom-6 md:left-6">Artworks</p>
     </div>
   );
@@ -40,8 +40,19 @@ function ToyRacingThumbnail({ className = "" }: { className?: string }) {
 
   return (
     <div className={`relative flex items-center justify-center overflow-hidden bg-black text-sm text-white ${className}`}>
-      <img src={imageSrc} alt="TOY RACING thumbnail" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.035] group-hover:duration-[1600ms]" />
-      <p className="absolute bottom-5 left-5 z-10 text-xs text-white md:bottom-6 md:left-6">TOY RACING</p>
+      <img src={imageSrc} alt="TOY RACING thumbnail" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.015] group-hover:duration-[1900ms]" />
+      <p className="absolute bottom-5 left-5 z-10 text-xs text-black md:bottom-6 md:left-6">TOY RACING</p>
+    </div>
+  );
+}
+
+function CaseStudyThumbnail({ className = "" }: { className?: string }) {
+  const imageSrc = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/projects/Student/케이스 스터디 권혁의 최종 00-00-11.png`;
+
+  return (
+    <div className={`relative flex items-center justify-center overflow-hidden bg-black text-sm text-white ${className}`}>
+      <img src={imageSrc} alt="Case Study - Showcase thumbnail" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.015] group-hover:duration-[1900ms]" />
+      <p className="absolute bottom-5 left-5 z-10 text-xs text-white md:bottom-6 md:left-6">Case Study - Showcase</p>
     </div>
   );
 }
@@ -97,9 +108,14 @@ export function VdasGallery() {
       <section aria-label="VDAS 01 works" className="vdas-gallery -mt-7 -translate-x-[6px] h-[calc(100svh-3rem)] overflow-hidden bg-[#EDEDED]">
         <div ref={scrollContainerRef} className="vdas-gallery-scroll h-full overflow-x-auto overflow-y-hidden">
           <div className="flex h-full min-w-max -translate-y-px items-stretch gap-3 px-6 md:gap-[1.5vw] md:px-10">
+          <section className="flex h-48 w-[calc(18vw+2rem)] min-w-[15rem] max-w-[20rem] shrink-0 self-center translate-x-3 -translate-y-10 flex-col justify-center">
+            <h1 className="text-[28px] font-medium leading-tight tracking-[-0.04em]">VDAS_01</h1>
+            <p className="mt-6 text-[15px] leading-[1.4] tracking-[-0.025em]">3D 파운데이션 83-5기,<br />인텐시브 19기의<br />작업물들을 모아봤습니다.</p>
+          </section>
+
           <Link
             href="/era/vdas-01/project/vdas-01-01"
-            className="group h-[calc(100svh-3.5rem)] aspect-video shrink-0 self-start"
+            className="group -ml-[96px] h-[calc(100svh-3.5rem)] aspect-video shrink-0 self-start"
             onPointerEnter={(event) => showCursorLabel("Balmuda Rain", event)}
             onPointerMove={moveCursorLabel}
             onPointerLeave={hideCursorLabel}
@@ -127,6 +143,16 @@ export function VdasGallery() {
               <ToyRacingThumbnail className="h-full w-full" />
             </Link>
           </div>
+
+          <Link
+            href="/era/vdas-01/project/vdas-01-04"
+            className="group h-[calc(100svh-3.5rem)] aspect-video shrink-0 self-start"
+            onPointerEnter={(event) => showCursorLabel("Case Study - Showcase", event)}
+            onPointerMove={moveCursorLabel}
+            onPointerLeave={hideCursorLabel}
+          >
+            <CaseStudyThumbnail className="h-full w-full" />
+          </Link>
           </div>
         </div>
       </section>

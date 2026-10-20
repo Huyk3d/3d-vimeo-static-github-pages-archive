@@ -113,12 +113,10 @@ export function LandingHero({ eras }: { eras: Era[] }) {
       setPhase("eras");
     };
     window.addEventListener("pointerdown", skipIntro, { passive: true });
-    window.addEventListener("wheel", skipIntro, { passive: true });
     window.addEventListener("touchstart", skipIntro, { passive: true });
 
     return () => {
       window.removeEventListener("pointerdown", skipIntro);
-      window.removeEventListener("wheel", skipIntro);
       window.removeEventListener("touchstart", skipIntro);
     };
   }, [phase]);
@@ -280,7 +278,7 @@ export function LandingHero({ eras }: { eras: Era[] }) {
       </div>
 
       <div className="relative mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center text-center">
-        {phase !== "eras" && <div className="relative flex min-h-28 w-full translate-y-[4.25rem] items-center justify-center md:min-h-36">
+        {phase !== "eras" && <div className="relative flex min-h-28 w-full translate-y-[5.25rem] items-center justify-center md:min-h-36">
           {phase === "greeting" && <p className="animate-landing-message text-[15px] font-medium tracking-tight md:text-[18px]">Hello, Hyuk!</p>}
           {phase === "introduction" && (
             <div className="animate-landing-message">
@@ -292,23 +290,43 @@ export function LandingHero({ eras }: { eras: Era[] }) {
         <div className="relative -top-7">
           <nav aria-label="Archive eras" className={`grid justify-items-center gap-2 text-sm transition-opacity duration-700 md:text-base ${phase === "eras" ? "opacity-100" : "pointer-events-none mt-10 opacity-0 md:mt-14"}`}>
             {eras.map((era) => (
-              <Link key={era.slug} href={`/era/${era.slug}`} className={`group cursor-pointer py-1 transition-colors duration-[600ms] ${isReelVisible ? "mix-blend-difference text-white hover:text-white" : "text-archive-text hover:text-archive-text"}`}>
-                <span>{landingEraLabels[era.slug] ?? era.title}</span>
+              <Link key={era.slug} href={`/era/${era.slug}`} className={`landing-era-link group cursor-pointer py-1 transition-colors duration-[600ms] ${isReelVisible ? "mix-blend-difference text-white hover:text-white" : "text-archive-text hover:text-archive-text"}`}>
+                <span className="landing-era-label">{landingEraLabels[era.slug] ?? era.title}</span>
               </Link>
             ))}
-            <Link href="/contact" className={`group cursor-pointer py-1 transition-colors duration-[600ms] ${isReelVisible ? "mix-blend-difference text-white hover:text-white" : "text-archive-text hover:text-archive-text"}`}>Contact</Link>
+            <Link href="/contact" className={`landing-era-link group cursor-pointer py-1 transition-colors duration-[600ms] ${isReelVisible ? "mix-blend-difference text-white hover:text-white" : "text-archive-text hover:text-archive-text"}`}><span className="landing-era-label">Info</span></Link>
           </nav>
 
           <button
             type="button"
             aria-label={isReelPlaying ? "Pause landing reel" : "Play landing reel"}
             onClick={toggleReelPlayback}
-            className={`mx-auto mt-4 flex h-9 w-9 cursor-pointer items-center justify-center text-[12px] transition-[transform,color,opacity] duration-300 hover:scale-[1.08] ${isReelVisible ? "mix-blend-difference text-white" : "text-archive-text"} ${isPlayButtonVisible ? "opacity-100" : "pointer-events-none opacity-0"}`}
+            className={`group relative mx-auto mt-4 flex h-9 w-9 cursor-pointer items-center justify-center text-[12px] transition-[opacity,transform,color] duration-300 ease-out hover:scale-[1.08] ${isReelVisible ? "mix-blend-difference text-white" : "text-archive-text"} ${isPlayButtonVisible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-1 opacity-0"}`}
           >
-            <span className={isReelPlaying ? "" : "translate-x-px"}>{isReelPlaying ? "Ⅱ" : "▶"}</span>
+            <span className={`${isReelPlaying ? "" : "translate-x-px"} leading-none`}>{isReelPlaying ? "Ⅱ" : "▶"}</span>
+            <span
+       className="pointer-events-none absolute left-1/2 top-[30px] -translate-x-1/2 text-[10px] leading-none tracking-[0.08em]"
+              style={{ fontFamily: '"IBM Plex Mono", monospace' }}
+            >
+              {isReelPlaying ? "PAUSE" : "PLAY"}
+            </span>
           </button>
         </div>
       </div>
+      <style jsx global>{`
+        .landing-page .landing-era-label {
+          display: inline-block;
+          transform: scale(1);
+          transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        @media (hover: hover) {
+          .landing-page .landing-era-link:hover .landing-era-label {
+            transform: scale(1.025);
+            transition-duration: 0.6s;
+          }
+        }
+      `}</style>
     </section>
   );
 }

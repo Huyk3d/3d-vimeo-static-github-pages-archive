@@ -32,7 +32,7 @@ function PlaceholderWork({
       onPointerMove={onPointerMove}
       onPointerLeave={onPointerLeave}
     >
-      <div className="absolute inset-0 bg-black transition-transform duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.035] group-hover:duration-[1600ms]" />
+      <div className="absolute inset-0 bg-black transition-transform duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.015] group-hover:duration-[1900ms]" />
       <span className="relative z-10">{label}</span>
       {title && <p className="absolute bottom-5 left-5 z-10 text-xs text-white md:bottom-6 md:left-6">{title}</p>}
     </div>
@@ -90,9 +90,14 @@ export function Vdas02Gallery() {
       <section aria-label="VDAS 02 works" className="vdas-gallery -mt-7 -translate-x-[6px] h-[calc(100svh-3rem)] overflow-hidden bg-[#EDEDED]">
       <div ref={scrollContainerRef} className="vdas-gallery-scroll h-full overflow-x-auto overflow-y-hidden">
         <div className="flex h-full min-w-max -translate-y-px items-stretch gap-3 px-6 md:gap-[1.5vw] md:px-10">
+          <section className="flex h-48 w-[calc(18vw+2rem)] min-w-[15rem] max-w-[20rem] shrink-0 self-center translate-x-3 -translate-y-10 flex-col justify-center">
+            <h1 className="text-[28px] font-medium leading-tight tracking-[-0.04em]">VDAS_02</h1>
+            <p className="mt-6 text-[15px] leading-[1.4] tracking-[-0.025em]">모션디자이너 86기 과정 동안의<br />모든 작업물들을 모아봤습니다.</p>
+          </section>
+
           <Link
             href="/era/vdas-02/project/vdas-02-01"
-            className="group h-[calc(100svh-3.5rem)] aspect-video shrink-0 self-start"
+            className="group -ml-4 h-[calc(100svh-3.5rem)] aspect-video shrink-0 self-start"
             onPointerEnter={(event) => showCursorLabel(largeWorks[0].title, event)}
             onPointerMove={moveCursorLabel}
             onPointerLeave={hideCursorLabel}

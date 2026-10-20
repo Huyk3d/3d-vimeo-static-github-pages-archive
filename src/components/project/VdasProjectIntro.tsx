@@ -57,7 +57,7 @@ export function VdasProjectIntro() {
             </div>
           </section>
 
-          <div className="h-[calc(100svh-7rem)] aspect-video shrink-0 -translate-x-[36px] overflow-hidden bg-black">
+          <div className="h-[calc(100svh-7rem)] aspect-video shrink-0 -translate-x-[20px] overflow-hidden bg-black">
             <iframe
               src="https://player.vimeo.com/video/1192152930?title=0&byline=0&portrait=0&badge=0&vimeo_logo=0"
               title="Balmuda Rain video"
@@ -67,29 +67,29 @@ export function VdasProjectIntro() {
             />
           </div>
 
-          <div className="grid h-[calc(100svh-7rem)] w-[calc((100svh-7rem-0.75rem)*1.7777778+0.75rem)] shrink-0 -translate-x-[36px] grid-cols-2 grid-rows-2 gap-3 md:w-[calc((100svh-7rem-1.5vw)*1.7777778+1.5vw)] md:gap-[1.5vw]">
+          <div className="grid h-[calc(100svh-7rem)] w-[calc((100svh-7rem-0.75rem)*1.7777778+0.75rem)] shrink-0 -translate-x-[20px] grid-cols-2 grid-rows-2 gap-3 md:w-[calc((100svh-7rem-1.5vw)*1.7777778+1.5vw)] md:gap-[1.5vw]">
             <ProjectImage number="01" className="aspect-video w-full" />
             <ProjectImage number="02" className="aspect-video w-full" />
             <ProjectImage number="03" className="aspect-video w-full" />
             <ProjectImage number="04" className="aspect-video w-full" />
           </div>
 
-          <ProjectImage number="05" className="h-[calc(100svh-7rem)] aspect-video shrink-0 -translate-x-[36px]" />
+          <ProjectImage number="05" className="h-[calc(100svh-7rem)] aspect-video shrink-0 -translate-x-[20px]" />
 
-          <div className="flex h-[calc(100svh-7rem)] w-[calc((100svh-7rem-0.75rem)*0.8888889)] shrink-0 -translate-x-[36px] flex-col gap-3 md:w-[calc((100svh-7rem-1.5vw)*0.8888889)] md:gap-[1.5vw]">
+          <div className="flex h-[calc(100svh-7rem)] w-[calc((100svh-7rem-0.75rem)*0.8888889)] shrink-0 -translate-x-[20px] flex-col gap-3 md:w-[calc((100svh-7rem-1.5vw)*0.8888889)] md:gap-[1.5vw]">
             <ProjectImage number="06" className="aspect-video w-full" />
             <ProjectImage number="07" className="aspect-video w-full" />
           </div>
 
-          <ProjectImage number="08" className="h-[calc(100svh-7rem)] aspect-video shrink-0 -translate-x-[36px]" />
-          <ProjectImage number="09" className="h-[calc(100svh-7rem)] aspect-video shrink-0 -translate-x-[36px]" />
+          <ProjectImage number="08" className="h-[calc(100svh-7rem)] aspect-video shrink-0 -translate-x-[20px]" />
+          <ProjectImage number="09" className="h-[calc(100svh-7rem)] aspect-video shrink-0 -translate-x-[20px]" />
 
-          <div className="flex h-[calc(100svh-7rem)] w-[calc((100svh-7rem-0.75rem)*0.8888889)] shrink-0 -translate-x-[36px] flex-col gap-3 md:w-[calc((100svh-7rem-1.5vw)*0.8888889)] md:gap-[1.5vw]">
+          <div className="flex h-[calc(100svh-7rem)] w-[calc((100svh-7rem-0.75rem)*0.8888889)] shrink-0 -translate-x-[20px] flex-col gap-3 md:w-[calc((100svh-7rem-1.5vw)*0.8888889)] md:gap-[1.5vw]">
             <ProjectImage number="10" className="aspect-video w-full" />
             <ProjectImage number="11" className="aspect-video w-full" />
           </div>
 
-          <ProjectImage number="12" className="h-[calc(100svh-7rem)] aspect-video shrink-0 -translate-x-[36px]" />
+          <ProjectImage number="12" className="h-[calc(100svh-7rem)] aspect-video shrink-0 -translate-x-[20px]" />
         </div>
       </div>
     </section>
