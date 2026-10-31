@@ -1,9 +1,13 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { ProjectVideoThumbnail, useProjectMediaLightbox } from "./ProjectMediaLightbox";
+
+const media = [{ type: "youtube" as const, src: "https://www.youtube.com/embed/HcP2pG3AjRo?rel=0&modestbranding=1&playsinline=1", title: "My Day video", thumbnailSrc: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/projects/Student/My Day.png`, aspectRatio: "16 / 9" }];
 
 export function StudentProject09Intro() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const { openMedia, lightbox } = useProjectMediaLightbox(media);
 
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current;
@@ -21,6 +25,7 @@ export function StudentProject09Intro() {
   }, []);
 
   return (
+    <>
     <section className="vdas-project-page -mt-7 -translate-x-[6px] h-[calc(100svh-3rem)] overflow-hidden bg-[#EDEDED]">
       <div ref={scrollContainerRef} className="vdas-project-scroll h-full overflow-x-auto overflow-y-hidden">
         <div className="flex h-full min-w-max items-center gap-3 px-6 md:gap-[1.5vw] md:px-10">
@@ -34,17 +39,11 @@ export function StudentProject09Intro() {
             </p>
           </section>
 
-          <div className="h-[calc(100svh-7rem)] aspect-video shrink-0 -translate-x-[40px] overflow-hidden bg-black">
-            <iframe
-              src="https://www.youtube.com/embed/HcP2pG3AjRo?rel=0&modestbranding=1&playsinline=1"
-              title="My Day video"
-              className="h-full w-full border-0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            />
-          </div>
+          <ProjectVideoThumbnail {...media[0]} className="h-[calc(100svh-7rem)] aspect-video shrink-0 -translate-x-[40px] bg-black" onOpen={() => openMedia(0)} />
         </div>
       </div>
     </section>
+    {lightbox}
+    </>
   );
 }

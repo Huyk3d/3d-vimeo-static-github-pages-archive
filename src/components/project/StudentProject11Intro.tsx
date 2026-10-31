@@ -1,9 +1,13 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { ProjectVideoThumbnail, useProjectMediaLightbox } from "./ProjectMediaLightbox";
+
+const media = [{ type: "vimeo" as const, src: "https://player.vimeo.com/video/1237502220?title=0&byline=0&portrait=0&badge=0&vimeo_logo=0&loop=1", title: "Bounce Ball video", thumbnailSrc: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/projects/Student/Ball.png`, aspectRatio: "16 / 9" }];
 
 export function StudentProject11Intro() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const { openMedia, lightbox } = useProjectMediaLightbox(media);
 
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current;
@@ -19,6 +23,7 @@ export function StudentProject11Intro() {
   }, []);
 
   return (
+    <>
     <section className="vdas-project-page -mt-7 -translate-x-[6px] h-[calc(100svh-3rem)] overflow-hidden bg-[#EDEDED]">
       <div ref={scrollContainerRef} className="vdas-project-scroll h-full overflow-x-auto overflow-y-hidden">
         <div className="flex h-full min-w-max items-center gap-3 px-6 md:gap-[1.5vw] md:px-10">
@@ -28,11 +33,11 @@ export function StudentProject11Intro() {
               정확히 기억나지는 않지만, 아마 2학년이었던 2023년에 모션그래픽 과제로 제작한 영상으로 기억하고 있습니다.
             </p>
           </section>
-          <div className="h-[calc(100svh-7rem)] aspect-video shrink-0 -translate-x-[70px] overflow-hidden bg-black">
-            <iframe src="https://player.vimeo.com/video/1237502220?title=0&byline=0&portrait=0&badge=0&vimeo_logo=0" title="Bounce Ball video" className="h-full w-full border-0" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen />
-          </div>
+          <ProjectVideoThumbnail {...media[0]} className="h-[calc(100svh-7rem)] aspect-video shrink-0 -translate-x-[70px] bg-black" onOpen={() => openMedia(0)} />
         </div>
       </div>
     </section>
+    {lightbox}
+    </>
   );
 }

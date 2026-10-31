@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { ProjectMediaButton, useProjectMediaLightbox } from "./ProjectMediaLightbox";
 
 const imageBasePath = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/projects/Vdas-01/01-02_Artworks`;
 
 const artworkNumbers = ["01", "02", "03", "04", "05"];
+const media = artworkNumbers.map((number) => ({ type: "image" as const, src: `${imageBasePath}/01-02_Artwokrs_${number}.png`, alt: `Foundation Study 02 artwork ${number}` }));
 
 export function Vdas01Project02Intro() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const { openMedia, lightbox } = useProjectMediaLightbox(media);
 
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current;
@@ -24,23 +27,29 @@ export function Vdas01Project02Intro() {
   }, []);
 
   return (
+    <>
     <section className="vdas-project-page -mt-7 -translate-x-[6px] h-[calc(100svh-3rem)] overflow-hidden bg-[#EDEDED]">
       <div ref={scrollContainerRef} className="vdas-project-scroll h-full overflow-x-auto overflow-y-hidden">
         <div className="flex h-full min-w-max items-center gap-[46px] px-6 md:gap-[calc(4.5vw+10px)] md:px-10">
-          {artworkNumbers.map((number) => (
-            <div
+          {artworkNumbers.map((number, index) => (
+            <ProjectMediaButton
               key={number}
+              label={`Open Foundation Study 02 artwork ${number}`}
+              onOpen={() => openMedia(index)}
               className={`group h-[calc(100svh-7rem)] w-fit max-w-none shrink-0 overflow-hidden ${number >= "03" ? "-translate-x-[15px]" : ""}`}
             >
               <img
                 src={`${imageBasePath}/01-02_Artwokrs_${number}.png`}
                 alt={`Foundation Study 02 artwork ${number}`}
                 className="block h-full w-auto max-w-none object-contain transition-transform duration-[500ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.025] group-hover:duration-[2000ms]"
+                draggable={false}
               />
-            </div>
+            </ProjectMediaButton>
           ))}
         </div>
       </div>
     </section>
+    {lightbox}
+    </>
   );
 }

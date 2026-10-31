@@ -10,7 +10,7 @@ const largeWorks = [
   {
     label: "01",
     title: "GAMEBOY CLASSIC",
-    imageSrc: `${imageBasePath}/GameBoy Classic_졸업작_01.png`,
+    imageSrc: `${imageBasePath}/GameBoy Classic_졸업작_07.png`,
   },
   {
     label: "04",

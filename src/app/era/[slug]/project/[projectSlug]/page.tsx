@@ -2,6 +2,11 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ProjectDetail } from "@/components/project/ProjectDetail";
 import { Vdas02ProjectIntro } from "@/components/project/Vdas02ProjectIntro";
+import { Vdas02Project02Intro } from "@/components/project/Vdas02Project02Intro";
+import { Vdas02Project03Intro } from "@/components/project/Vdas02Project03Intro";
+import { Vdas02Project04Intro } from "@/components/project/Vdas02Project04Intro";
+import { Vdas02Project05Intro } from "@/components/project/Vdas02Project05Intro";
+import { Vdas02Project06Intro } from "@/components/project/Vdas02Project06Intro";
 import { Vdas01Project02Intro } from "@/components/project/Vdas01Project02Intro";
 import { Vdas01Project03Intro } from "@/components/project/Vdas01Project03Intro";
 import { Vdas01Project04Intro } from "@/components/project/Vdas01Project04Intro";
@@ -32,6 +37,11 @@ export function generateStaticParams() {
     { slug: "vdas-01", projectSlug: "vdas-01-03" },
     { slug: "vdas-01", projectSlug: "vdas-01-04" },
     { slug: "vdas-02", projectSlug: "vdas-02-01" },
+    { slug: "vdas-02", projectSlug: "vdas-02-02" },
+    { slug: "vdas-02", projectSlug: "vdas-02-03" },
+    { slug: "vdas-02", projectSlug: "vdas-02-04" },
+    { slug: "vdas-02", projectSlug: "vdas-02-05" },
+    { slug: "vdas-02", projectSlug: "vdas-02-06" },
     { slug: "when-student-01", projectSlug: "student-01" },
     { slug: "when-student-01", projectSlug: "student-02" },
     { slug: "when-student-01", projectSlug: "student-03" },
@@ -74,6 +84,26 @@ export default function ProjectPage({ params }: { params: { slug: string; projec
 
   if (params.slug === "vdas-02" && params.projectSlug === "vdas-02-01") {
     return <Vdas02ProjectIntro />;
+  }
+
+  if (params.slug === "vdas-02" && params.projectSlug === "vdas-02-02") {
+    return <Vdas02Project02Intro />;
+  }
+
+  if (params.slug === "vdas-02" && params.projectSlug === "vdas-02-03") {
+    return <Vdas02Project03Intro />;
+  }
+
+  if (params.slug === "vdas-02" && params.projectSlug === "vdas-02-04") {
+    return <Vdas02Project04Intro />;
+  }
+
+  if (params.slug === "vdas-02" && params.projectSlug === "vdas-02-05") {
+    return <Vdas02Project05Intro />;
+  }
+
+  if (params.slug === "vdas-02" && params.projectSlug === "vdas-02-06") {
+    return <Vdas02Project06Intro />;
   }
 
   if (params.slug === "when-student-01" && params.projectSlug === "student-01") {

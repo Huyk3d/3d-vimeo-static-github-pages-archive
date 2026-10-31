@@ -1,8 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { ProjectMediaButton, ProjectVideoThumbnail, useProjectMediaLightbox } from "./ProjectMediaLightbox";
 
 const imageBasePath = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/projects/Student/3-1 HELLO`;
+const video = { type: "youtube" as const, src: "https://www.youtube.com/embed/DsG2NxF65TM?rel=0&modestbranding=1&playsinline=1", title: "HELLO! video", thumbnailSrc: `${imageBasePath}/HELLO THUM.png`, aspectRatio: "16 / 9" };
+const media = [video, ...Array.from({ length: 18 }, (_, index) => ({ type: "image" as const, src: `${imageBasePath}/3-1_기말PPT_${index + 1}.png`, alt: `HELLO! presentation image ${index + 1}` }))];
 
 const imageGroups = [
   { large: "1" },
@@ -19,22 +22,22 @@ const imageGroups = [
   { small: ["17", "18"] },
 ];
 
-function ProjectImage({ number, className = "" }: { number: string; className?: string }) {
+function ProjectImage({ number, className = "", onOpen }: { number: string; className?: string; onOpen: () => void }) {
   return (
-    <div className={`group overflow-hidden bg-black ${className}`}>
+    <ProjectMediaButton label={`Open HELLO! presentation image ${number}`} className={`bg-black ${className}`} onOpen={onOpen}>
       <img
         src={`${imageBasePath}/3-1_기말PPT_${number}.png`}
         alt={`HELLO! presentation image ${number}`}
         className="h-full w-full object-contain transition-transform duration-[500ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.025] group-hover:duration-[2000ms]"
+        draggable={false}
       />
-    </div>
+    </ProjectMediaButton>
   );
 }
 
 export function StudentProject03Intro() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const videoAreaRef = useRef<HTMLDivElement>(null);
-  const [isVideoInteractive, setIsVideoInteractive] = useState(false);
+  const { openMedia, lightbox } = useProjectMediaLightbox(media);
 
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current;
@@ -51,19 +54,8 @@ export function StudentProject03Intro() {
     return () => scrollContainer.removeEventListener("wheel", handleWheel);
   }, []);
 
-  useEffect(() => {
-    const restoreScrollPriority = (event: PointerEvent) => {
-      const videoArea = videoAreaRef.current;
-      if (!videoArea || videoArea.contains(event.target as Node)) return;
-
-      setIsVideoInteractive(false);
-    };
-
-    window.addEventListener("pointerdown", restoreScrollPriority, true);
-    return () => window.removeEventListener("pointerdown", restoreScrollPriority, true);
-  }, []);
-
   return (
+    <>
     <section className="vdas-project-page -mt-7 -translate-x-[6px] h-[calc(100svh-3rem)] overflow-hidden bg-[#EDEDED]">
       <div ref={scrollContainerRef} className="vdas-project-scroll h-full overflow-x-auto overflow-y-hidden">
         <div className="flex h-full min-w-max items-center gap-3 px-6 md:gap-[1.5vw] md:px-10">
@@ -78,31 +70,11 @@ export function StudentProject03Intro() {
             </div>
           </section>
 
-          <div
-            ref={videoAreaRef}
-            className="relative h-[calc(100svh-7rem)] aspect-video shrink-0 -translate-x-[36px] overflow-hidden bg-black"
-            onPointerLeave={() => setIsVideoInteractive(false)}
-          >
-            <iframe
-              src="https://www.youtube.com/embed/DsG2NxF65TM?rel=0&modestbranding=1&playsinline=1"
-              title="HELLO! video"
-              className="h-full w-full border-0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            />
-            {!isVideoInteractive && (
-              <button
-                type="button"
-                aria-label="Enable YouTube controls"
-                onClick={() => setIsVideoInteractive(true)}
-                className="absolute inset-0 z-10 cursor-pointer bg-transparent"
-              />
-            )}
-          </div>
+          <ProjectVideoThumbnail {...video} className="h-[calc(100svh-7rem)] aspect-video shrink-0 -translate-x-[36px] bg-black" onOpen={() => openMedia(0)} />
 
           {imageGroups.map((group) => {
             if (group.large) {
-              return <ProjectImage key={group.large} number={group.large} className="h-[calc(100svh-7rem)] aspect-video shrink-0 -translate-x-[36px]" />;
+              return <ProjectImage key={group.large} number={group.large} className="h-[calc(100svh-7rem)] aspect-video shrink-0 -translate-x-[36px]" onOpen={() => openMedia(Number(group.large))} />;
             }
 
             return (
@@ -110,12 +82,14 @@ export function StudentProject03Intro() {
                 key={group.small?.join("-")}
                 className="flex h-[calc(100svh-7rem)] w-[calc((100svh-7rem-0.75rem)*0.8888889)] shrink-0 -translate-x-[36px] flex-col gap-3 md:w-[calc((100svh-7rem-1.5vw)*0.8888889)] md:gap-[1.5vw]"
               >
-                {group.small?.map((number) => <ProjectImage key={number} number={number} className="h-full w-full" />)}
+                {group.small?.map((number) => <ProjectImage key={number} number={number} className="h-full w-full" onOpen={() => openMedia(Number(number))} />)}
               </div>
             );
           })}
         </div>
       </div>
     </section>
+    {lightbox}
+    </>
   );
 }

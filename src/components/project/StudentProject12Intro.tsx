@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { ProjectMediaButton, useProjectMediaLightbox } from "./ProjectMediaLightbox";
 
 const artworkBasePath = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/projects/Student/캐디`;
 const artworks = [
@@ -11,9 +12,11 @@ const artworks = [
   { file: "6.png", caption: "하지만 코뿌리와 당당이는 둘이서만 게임하고 놀고있다" },
   { file: "4.png", caption: "결국 잔뜩 삐져버린 상상이" },
 ];
+const media = artworks.map((artwork, index) => ({ type: "image" as const, src: `${artworkBasePath}/${artwork.file}`, alt: `Character Design artwork ${index + 1}` }));
 
 export function StudentProject12Intro() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const { openMedia, lightbox } = useProjectMediaLightbox(media);
 
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current;
@@ -29,6 +32,7 @@ export function StudentProject12Intro() {
   }, []);
 
   return (
+    <>
     <section className="vdas-project-page -mt-7 -translate-x-[6px] h-[calc(100svh-3rem)] overflow-hidden bg-[#EDEDED]">
       <div ref={scrollContainerRef} className="vdas-project-scroll h-full overflow-x-auto overflow-y-hidden">
         <div className="flex h-full min-w-max items-center gap-3 px-6 md:gap-[1.5vw] md:px-10">
@@ -40,14 +44,15 @@ export function StudentProject12Intro() {
             </div>
           </section>
           {artworks.map((artwork, index) => (
-            <div key={artwork.file} className={`group relative h-[calc(100svh-7rem)] shrink-0 overflow-visible ${index === 0 ? "-ml-[50px]" : ""}`}>
-              <div className="h-full overflow-hidden">
+            <div key={artwork.file} className={`relative h-[calc(100svh-7rem)] shrink-0 overflow-visible ${index === 0 ? "-ml-[50px]" : ""}`}>
+              <ProjectMediaButton label={`Open Character Design artwork ${index + 1}`} className="h-full bg-transparent" onOpen={() => openMedia(index)}>
                 <img
                   src={`${artworkBasePath}/${artwork.file}`}
                   alt={`Character Design artwork ${index + 1}`}
+                  draggable={false}
                   className="h-full w-auto max-w-none object-contain transition-transform duration-[500ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.025] group-hover:duration-[2000ms]"
                 />
-              </div>
+              </ProjectMediaButton>
               {artwork.caption && (
                 <p className="absolute left-0 top-full mt-2 max-w-full text-[12px] leading-[1.35] tracking-[-0.025em] text-neutral-600 [word-break:keep-all] [overflow-wrap:break-word]">
                   {artwork.caption}
@@ -58,5 +63,7 @@ export function StudentProject12Intro() {
         </div>
       </div>
     </section>
+    {lightbox}
+    </>
   );
 }

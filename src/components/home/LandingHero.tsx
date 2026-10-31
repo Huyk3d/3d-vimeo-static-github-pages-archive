@@ -61,8 +61,12 @@ const landingEraLabels: Record<string, string> = {
   "vdas-02": "VDAS_02",
 };
 
+const landingHistoryPhaseKey = "__huykLandingPhase";
+const landingHierarchyReturnKey = "__huykLandingHierarchyReturn";
+
 export function LandingHero({ eras }: { eras: Era[] }) {
   const [phase, setPhase] = useState<LandingPhase>("blank");
+  const [isLandingStateResolved, setIsLandingStateResolved] = useState(false);
   const [isPlayButtonVisible, setIsPlayButtonVisible] = useState(false);
   const [isReelVisible, setIsReelVisible] = useState(false);
   const [isReelPlaying, setIsReelPlaying] = useState(false);
@@ -96,6 +100,41 @@ export function LandingHero({ eras }: { eras: Era[] }) {
   }, []);
 
   useEffect(() => {
+    const navigationEntry = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+    const currentHistoryState = (window.history.state ?? {}) as Record<string, unknown>;
+    const isReloadNavigation = navigationEntry?.type === "reload"
+      || window.performance.navigation.type === window.performance.navigation.TYPE_RELOAD;
+    const isHierarchyReturn = window.sessionStorage.getItem(landingHierarchyReturnKey) === "eras";
+
+    if (isReloadNavigation) {
+      window.sessionStorage.removeItem(landingHierarchyReturnKey);
+      if (landingHistoryPhaseKey in currentHistoryState) {
+        const { [landingHistoryPhaseKey]: _landingPhase, ...nextHistoryState } = currentHistoryState;
+        window.history.replaceState(nextHistoryState, "", window.location.href);
+      }
+      setIsLandingStateResolved(true);
+      return;
+    }
+
+    if (isHierarchyReturn) {
+      window.sessionStorage.removeItem(landingHierarchyReturnKey);
+      setPhase("eras");
+      setIsPlayButtonVisible(true);
+      setIsLandingStateResolved(true);
+      return;
+    }
+
+    if (currentHistoryState[landingHistoryPhaseKey] === "eras") {
+      setPhase("eras");
+      setIsPlayButtonVisible(true);
+    }
+
+    setIsLandingStateResolved(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isLandingStateResolved || phase === "eras") return;
+
     introTimers.current = [
       window.setTimeout(() => setPhase("greeting"), 700),
       window.setTimeout(() => setPhase("introduction"), 2900),
@@ -103,7 +142,20 @@ export function LandingHero({ eras }: { eras: Era[] }) {
     ];
 
     return clearIntroTimers;
-  }, []);
+  }, [isLandingStateResolved]);
+
+  useEffect(() => {
+    if (!isLandingStateResolved || phase !== "eras") return;
+
+    const currentHistoryState = (window.history.state ?? {}) as Record<string, unknown>;
+    if (currentHistoryState[landingHistoryPhaseKey] === "eras") return;
+
+    window.history.replaceState(
+      { ...currentHistoryState, [landingHistoryPhaseKey]: "eras" },
+      "",
+      window.location.href,
+    );
+  }, [isLandingStateResolved, phase]);
 
   useEffect(() => {
     if (phase === "eras") return;
