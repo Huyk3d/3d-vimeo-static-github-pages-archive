@@ -1,6 +1,6 @@
 import { LandingHero } from "@/components/home/LandingHero";
-import { eras } from "@/data/eras";
+import { yearEras } from "@/data/yearEras";
 
 export default function HomePage() {
-  return <LandingHero eras={eras} />;
+  return <LandingHero eras={yearEras} />;
 }

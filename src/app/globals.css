@@ -41,11 +41,13 @@ html:has(.home-scroll-snap) { scroll-snap-type: y mandatory; }
   scroll-snap-stop: always;
 }
 
-body:has(.contact-page) > footer {
+body:has(.contact-page) > footer,
+body:has(.about-page) > footer {
   display: none;
 }
 
-body:has(.contact-page) > header {
+body:has(.contact-page) > header,
+body:has(.about-page) > header {
   position: fixed;
   left: 0;
   top: 0;

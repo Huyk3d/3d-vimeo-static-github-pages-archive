@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import type { Era } from "@/types/archive";
+import { landingExhibition, type LandingExhibitionPreview } from "@/data/landingExhibition";
+import { D2CodingFontSource } from "@/components/layout/Header";
 
 type LandingPhase = "blank" | "greeting" | "introduction" | "eras";
 
@@ -56,15 +57,28 @@ function loadVimeoPlayerApi() {
 }
 
 const landingEraLabels: Record<string, string> = {
-  "when-student-01": "Student",
-  "vdas-01": "VDAS_01",
-  "vdas-02": "VDAS_02",
+  "2023": "2023",
+  "2024": "2024",
+  "2025": "2025",
+  "2026": "2026",
 };
 
 const landingHistoryPhaseKey = "__huykLandingPhase";
 const landingHierarchyReturnKey = "__huykLandingHierarchyReturn";
 
-export function LandingHero({ eras }: { eras: Era[] }) {
+function ExhibitionPreview({ preview, className }: { preview: LandingExhibitionPreview; className: string }) {
+  return (
+    <Link
+      href={preview.href}
+      className={`landing-exhibit-image group block shrink-0 overflow-hidden ${className}`}
+      data-exhibit-image="true"
+    >
+      <img src={preview.src} alt={preview.alt} className="block size-full object-cover transition-transform duration-[500ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.025] group-hover:duration-[2000ms]" />
+    </Link>
+  );
+}
+
+export function LandingHero({ eras }: { eras: readonly { slug: string; title: string }[] }) {
   const [phase, setPhase] = useState<LandingPhase>("blank");
   const [isLandingStateResolved, setIsLandingStateResolved] = useState(false);
   const [isPlayButtonVisible, setIsPlayButtonVisible] = useState(false);
@@ -80,6 +94,7 @@ export function LandingHero({ eras }: { eras: Era[] }) {
   const isPlayRequestInFlightRef = useRef(false);
   const playRequestIdRef = useRef(0);
   const playTimeoutRef = useRef<number | null>(null);
+  const exhibitionScrollRef = useRef<HTMLDivElement>(null);
 
   const clearIntroTimers = () => {
     introTimers.current.forEach((timer) => window.clearTimeout(timer));
@@ -310,59 +325,224 @@ export function LandingHero({ eras }: { eras: Era[] }) {
     return () => window.clearTimeout(playButtonTimer);
   }, [phase]);
 
+  useEffect(() => {
+    const scrollContainer = exhibitionScrollRef.current;
+    if (!scrollContainer) return;
+
+    const handleWheel = (event: WheelEvent) => {
+      event.preventDefault();
+      if (phase !== "eras") return;
+
+      const delta = event.deltaX !== 0 ? event.deltaX : event.deltaY;
+      if (delta === 0) return;
+
+      scrollContainer.scrollLeft += delta;
+    };
+
+    scrollContainer.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      scrollContainer.removeEventListener("wheel", handleWheel);
+    };
+  }, [phase]);
+
+  useEffect(() => {
+    if (phase !== "eras") return;
+
+    const scrollContainer = exhibitionScrollRef.current;
+    if (!scrollContainer) return;
+    let isDisposed = false;
+    const animationFrames = new Set<number>();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const frame = window.requestAnimationFrame(() => {
+            animationFrames.delete(frame);
+            if (isDisposed) return;
+
+            entry.target.classList.add("is-entered");
+            entry.target
+              .closest<HTMLElement>("[data-exhibit-section]")
+              ?.querySelector<HTMLElement>("[data-exhibit-year]")
+              ?.classList.add("is-entered");
+          });
+          animationFrames.add(frame);
+          observer.unobserve(entry.target);
+        });
+      },
+      { root: scrollContainer, threshold: 0.25 },
+    );
+
+    scrollContainer.querySelectorAll<HTMLElement>("[data-exhibit-image]").forEach((image) => observer.observe(image));
+    return () => {
+      isDisposed = true;
+      animationFrames.forEach((frame) => window.cancelAnimationFrame(frame));
+      observer.disconnect();
+    };
+  }, [phase]);
+
   return (
-    <section className="landing-page relative flex min-h-[100svh] flex-col overflow-visible bg-[#EDEDED] px-6 pb-16 pt-16 md:px-10 md:pb-20 md:pt-24">
+    <section className="landing-page relative h-[100svh] overflow-hidden bg-[#EDEDED]">
+      <D2CodingFontSource />
       <style jsx global>{`
         body:has(.landing-page) > footer {
           display: none;
         }
+
+        body:has(.landing-page) {
+          overflow: hidden;
+        }
+
+        .landing-exhibition-scroll {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+
+        .landing-exhibition-scroll::-webkit-scrollbar {
+          display: none;
+        }
+
+        .landing-exhibit-year,
+        .landing-exhibit-image {
+          opacity: 0;
+          transform: translateX(6px);
+          transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .landing-exhibit-year.is-entered,
+        .landing-exhibit-image.is-entered {
+          opacity: 1;
+          transform: translateX(0);
+        }
+
       `}</style>
-      <div className={`pointer-events-none absolute inset-0 overflow-hidden bg-[#EDEDED] transition-opacity duration-300 ${isReelFrameVisible ? "opacity-100" : "opacity-0"}`}>
-        <iframe
-          ref={reelIframeRef}
-          src="https://player.vimeo.com/video/1233663036?autoplay=0&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&badge=0&vimeo_logo=0"
-          title="Landing reel"
-          className="absolute left-1/2 top-1/2 h-[56.25vw] min-h-[100svh] w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0"
-          allow="autoplay; fullscreen; picture-in-picture"
-          allowFullScreen
-        />
-        <div className="absolute inset-0 bg-black/20" />
-      </div>
-
-      <div className="relative mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center text-center">
-        {phase !== "eras" && <div className="relative flex min-h-28 w-full translate-y-[5.25rem] items-center justify-center md:min-h-36">
-          {phase === "greeting" && <p className="animate-landing-message text-[15px] font-medium tracking-tight md:text-[18px]">Hello, Hyuk!</p>}
-          {phase === "introduction" && (
-            <div className="animate-landing-message">
-              <h1 className="text-[15px] font-medium leading-[1.05] tracking-tight md:text-[22px]">Welcome to<br />A personal archive.</h1>
+      <div ref={exhibitionScrollRef} className="landing-exhibition-scroll h-full overflow-x-auto overflow-y-hidden">
+        <div className="flex h-full min-w-max">
+          <section className="relative h-full w-[100vw] shrink-0 overflow-hidden bg-[#EDEDED]">
+            <div className={`pointer-events-none absolute inset-0 overflow-hidden bg-[#EDEDED] transition-opacity duration-300 ${isReelFrameVisible ? "opacity-100" : "opacity-0"}`}>
+              <iframe
+                ref={reelIframeRef}
+                src="https://player.vimeo.com/video/1233663036?autoplay=0&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&badge=0&vimeo_logo=0"
+                title="Landing reel"
+                className="absolute left-1/2 top-1/2 h-[56.25vw] min-h-[100svh] w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowFullScreen
+              />
+              <div className="absolute inset-0 bg-black/20" />
             </div>
-          )}
-        </div>}
 
-        <div className="relative -top-7">
-          <nav aria-label="Archive eras" className={`grid justify-items-center gap-2 text-sm transition-opacity duration-700 md:text-base ${phase === "eras" ? "opacity-100" : "pointer-events-none mt-10 opacity-0 md:mt-14"}`}>
-            {eras.map((era) => (
-              <Link key={era.slug} href={`/era/${era.slug}`} className={`landing-era-link group cursor-pointer py-1 transition-colors duration-[600ms] ${isReelVisible ? "mix-blend-difference text-white hover:text-white" : "text-archive-text hover:text-archive-text"}`}>
-                <span className="landing-era-label">{landingEraLabels[era.slug] ?? era.title}</span>
-              </Link>
-            ))}
-            <Link href="/contact" className={`landing-era-link group cursor-pointer py-1 transition-colors duration-[600ms] ${isReelVisible ? "mix-blend-difference text-white hover:text-white" : "text-archive-text hover:text-archive-text"}`}><span className="landing-era-label">Info</span></Link>
-          </nav>
+            <header className="absolute inset-x-0 top-0 z-10 translate-y-[6px] px-6 py-5 md:px-10">
+              <div className="flex items-start justify-between">
+                <nav aria-label="Archive home" className="inline-flex -translate-x-[6px] -translate-y-4 items-center text-xs tracking-tight">
+                  <Link href="/" className="font-bold transition-opacity hover:opacity-60" style={{ fontWeight: 700 }}>huyk</Link>
+                </nav>
+                <nav aria-label="Archive eras" className={`grid -translate-x-[2px] -translate-y-4 justify-items-end gap-[6px] text-[15px] font-bold leading-[1.25] transition-opacity duration-700 md:text-[17px] ${phase === "eras" ? "opacity-100" : "pointer-events-none opacity-0"}`}>
+                  {eras.map((era) => (
+                    <Link key={era.slug} href={`/era/${era.slug}`} className={`landing-era-link group cursor-pointer py-0.5 transition-colors duration-[600ms] ${isReelVisible ? "mix-blend-difference text-white hover:text-white" : "text-archive-text hover:text-archive-text"}`}>
+                      <span className="landing-era-label">{landingEraLabels[era.slug] ?? era.title}</span>
+                    </Link>
+                  ))}
+                  <Link href="/about" className={`landing-era-link group cursor-pointer py-0.5 transition-colors duration-[600ms] ${isReelVisible ? "mix-blend-difference text-white hover:text-white" : "text-archive-text hover:text-archive-text"}`}><span className="landing-era-label">about</span></Link>
+                  <Link href="/contact" className={`landing-era-link group cursor-pointer py-0.5 transition-colors duration-[600ms] ${isReelVisible ? "mix-blend-difference text-white hover:text-white" : "text-archive-text hover:text-archive-text"}`}><span className="landing-era-label">contact</span></Link>
+                </nav>
+              </div>
+            </header>
 
-          <button
-            type="button"
-            aria-label={isReelPlaying ? "Pause landing reel" : "Play landing reel"}
-            onClick={toggleReelPlayback}
-            className={`group relative mx-auto mt-4 flex h-9 w-9 cursor-pointer items-center justify-center text-[12px] transition-[opacity,transform,color] duration-300 ease-out hover:scale-[1.08] ${isReelVisible ? "mix-blend-difference text-white" : "text-archive-text"} ${isPlayButtonVisible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-1 opacity-0"}`}
-          >
-            <span className={`${isReelPlaying ? "" : "translate-x-px"} leading-none`}>{isReelPlaying ? "Ⅱ" : "▶"}</span>
-            <span
-       className="pointer-events-none absolute left-1/2 top-[30px] -translate-x-1/2 text-[10px] leading-none tracking-[0.08em]"
-              style={{ fontFamily: '"IBM Plex Mono", monospace' }}
+            {phase !== "eras" && <div className="absolute left-1/2 top-1/2 flex min-h-28 w-full -translate-x-1/2 -translate-y-[calc(50%+8px)] items-center justify-center text-center md:min-h-36">
+              {phase === "greeting" && <p className="animate-landing-message text-[15px] font-medium tracking-tight md:text-[18px]">Hello, Hyuk!</p>}
+              {phase === "introduction" && (
+                <div className="animate-landing-message">
+                  <h1 className="text-[15px] font-medium leading-[1.05] tracking-tight md:text-[22px]">Welcome to<br />A personal archive.</h1>
+                </div>
+              )}
+            </div>}
+
+            <button
+              type="button"
+              aria-label={isReelPlaying ? "Pause landing reel" : "Play landing reel"}
+              onClick={toggleReelPlayback}
+              className={`group absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-[6px] cursor-pointer transition-[opacity,transform,color] duration-300 ease-out hover:scale-[1.08] ${isReelVisible ? "mix-blend-difference text-white" : "text-archive-text"} ${isPlayButtonVisible ? "opacity-100" : "pointer-events-none translate-y-1 opacity-0"}`}
             >
-              {isReelPlaying ? "PAUSE" : "PLAY"}
-            </span>
-          </button>
+              <span className={`${isReelPlaying ? "" : "translate-x-px"} text-[16px] leading-none`}>{isReelPlaying ? "Ⅱ" : "▶"}</span>
+              <span className="pointer-events-none text-[13px] leading-none tracking-[0.08em]" style={{ fontFamily: '"IBM Plex Mono", monospace' }}>
+                {isReelPlaying ? "PAUSE" : "PLAY"}
+              </span>
+            </button>
+          </section>
+
+          <section className="relative flex h-full min-w-[100vw] shrink-0 items-center gap-[10vw] bg-[#EDEDED] px-[10vw]">
+            <img src={landingExhibition.introduceImage.src} alt={landingExhibition.introduceImage.alt} className="block h-[calc(100svh-10rem)] w-auto max-w-[42vw] object-contain" />
+            <div className="w-[32vw] min-w-[24rem] max-w-[34rem] text-left text-[15px] leading-[1.55] tracking-[-0.025em] [word-break:keep-all] [overflow-wrap:break-word]">
+              <p>이 사이트에 방문 하신 것을 진심으로 환영합니다!</p>
+              <p className="mt-6">단순한 포트폴리오 사이트처럼 작업물을 단순히 나열하지 않고 제가 이 분야를 작업하면서 보낸 시간의 흐름으로 성장 과정을 기록합니다.</p>
+              <p className="mt-10">전체적인 방향은 전시(Gallery)와 회고록(Archive)의 중간 지점으로 기획해 제작했으며 방문자분들은 “이 사람이 어떤 과정을 거쳐 성장해왔는지”를 자연스럽게 봐주시면 감사하겠습니다.</p>
+            </div>
+          </section>
+
+          <section className="relative flex h-full w-max shrink-0 items-center bg-[#EDEDED] px-[6vw]">
+            <div data-exhibit-section className="landing-exhibit-section relative flex h-full items-center">
+              <span data-exhibit-year className="landing-exhibit-year absolute left-0 top-6 text-[19px] font-bold leading-none">2023</span>
+              <div className="mt-[calc(5svh+1.35rem)] shrink-0 self-start">
+                <div className="flex items-center gap-[3vw]">
+                  <ExhibitionPreview preview={landingExhibition.preview2023.imac} className="h-[calc(65svh-2rem)] aspect-video" />
+                  <ExhibitionPreview preview={landingExhibition.preview2023.toyWorld} className="h-[calc(65svh-2rem)] aspect-[3/4]" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="relative flex h-full w-max shrink-0 items-center bg-[#EDEDED] px-[6vw]">
+            <div data-exhibit-section className="landing-exhibit-section relative flex h-full items-center">
+              <span data-exhibit-year className="landing-exhibit-year absolute left-0 top-6 text-[19px] font-bold leading-none">2024</span>
+              <div className="mt-[calc(5svh+1.35rem)] shrink-0 self-start">
+                <div className="grid h-[calc(65svh-2rem)] w-[calc((65svh-2rem)*1.78)] shrink-0 grid-cols-2 grid-rows-2 gap-3 md:gap-[1.5vw]">
+                  {landingExhibition.preview2024.map((preview, index) => <ExhibitionPreview key={`${preview.href}-${index}`} preview={preview} className="aspect-video" />)}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="relative flex h-full w-max shrink-0 items-center bg-[#EDEDED] px-[6vw]">
+            <div data-exhibit-section className="landing-exhibit-section relative flex h-full items-center">
+              <span data-exhibit-year className="landing-exhibit-year absolute left-0 top-6 text-[19px] font-bold leading-none">2025</span>
+              <div className="mt-[calc(5svh+1.35rem)] shrink-0 self-start">
+                <div className="flex items-center gap-[3vw]">
+                  <ExhibitionPreview preview={landingExhibition.preview2025.gameboy} className="h-[calc(65svh-2rem)] aspect-video" />
+                  <ExhibitionPreview preview={landingExhibition.preview2025.angel} className="h-[calc(65svh-2rem)] aspect-[3/4]" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="relative flex h-full w-max shrink-0 items-center bg-[#EDEDED] px-[6vw]">
+            <div data-exhibit-section className="landing-exhibit-section relative flex h-full items-center">
+              <span data-exhibit-year className="landing-exhibit-year absolute left-0 top-6 text-[19px] font-bold leading-none">2026</span>
+              <div className="mt-[calc(5svh+1.35rem)] shrink-0 self-start">
+                <div className="flex items-center gap-[3vw]">
+                  <ExhibitionPreview preview={landingExhibition.preview2026.artworks} className="h-[calc(65svh-2rem)] aspect-[4/5]" />
+                  <ExhibitionPreview preview={landingExhibition.preview2026.aiVideo} className="h-[calc(65svh-2rem)] aspect-[3712/4608]" />
+                  <ExhibitionPreview preview={landingExhibition.preview2026.galaxy} className="h-[calc(65svh-2rem)] aspect-video" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="grid h-full min-w-[100vw] shrink-0 grid-cols-[0.55fr_1.45fr] items-center gap-[8vw] bg-[#111111] px-[10vw] text-[#F2F2F2]">
+            <div className="space-y-7 text-[15px] leading-[1.45]">
+              <div><p className="font-bold">Insta</p><p className="mt-1">huyk_3d</p></div>
+              <div><p className="font-bold">Discord</p><p className="mt-1">kkkkkkh</p></div>
+              <div><p className="font-bold">Email</p><p className="mt-1">kwonhy5300@naver.com</p></div>
+            </div>
+            <div className="text-left font-bold tracking-[-0.04em]">
+              <p className="text-[clamp(70px,7.6vw,136px)] leading-none">HUYK</p>
+              <div className="mt-[0.28em] text-[clamp(42px,5.2vw,92px)] leading-[1.08]">
+                <p>THANK FOR VISIT</p>
+                <p>MY Gallery</p>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
       <style jsx global>{`

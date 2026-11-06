@@ -6,7 +6,7 @@ import { ProjectMediaButton, useProjectMediaLightbox } from "./ProjectMediaLight
 const imageBasePath = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/projects/Vdas-01/01-02_Artworks`;
 
 const artworkNumbers = ["01", "02", "03", "04", "05"];
-const media = artworkNumbers.map((number) => ({ type: "image" as const, src: `${imageBasePath}/01-02_Artwokrs_${number}.png`, alt: `Foundation Study 02 artwork ${number}` }));
+const media = artworkNumbers.map((number) => ({ type: "image" as const, src: `${imageBasePath}/01-02_Artwokrs_${number}.png`, alt: `Vdas Intensive_Artworks ${number}` }));
 
 export function Vdas01Project02Intro() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -34,13 +34,13 @@ export function Vdas01Project02Intro() {
           {artworkNumbers.map((number, index) => (
             <ProjectMediaButton
               key={number}
-              label={`Open Foundation Study 02 artwork ${number}`}
+              label={`Open Vdas Intensive_Artworks ${number}`}
               onOpen={() => openMedia(index)}
               className={`group h-[calc(100svh-7rem)] w-fit max-w-none shrink-0 overflow-hidden ${number >= "03" ? "-translate-x-[15px]" : ""}`}
             >
               <img
                 src={`${imageBasePath}/01-02_Artwokrs_${number}.png`}
-                alt={`Foundation Study 02 artwork ${number}`}
+                alt={`Vdas Intensive_Artworks ${number}`}
                 className="block h-full w-auto max-w-none object-contain transition-transform duration-[500ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.025] group-hover:duration-[2000ms]"
                 draggable={false}
               />

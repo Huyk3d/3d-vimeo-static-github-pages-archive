@@ -1,15 +1,15 @@
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { ProjectDetail } from "@/components/project/ProjectDetail";
 import { Vdas02ProjectIntro } from "@/components/project/Vdas02ProjectIntro";
 import { Vdas02Project02Intro } from "@/components/project/Vdas02Project02Intro";
 import { Vdas02Project03Intro } from "@/components/project/Vdas02Project03Intro";
 import { Vdas02Project04Intro } from "@/components/project/Vdas02Project04Intro";
 import { Vdas02Project05Intro } from "@/components/project/Vdas02Project05Intro";
 import { Vdas02Project06Intro } from "@/components/project/Vdas02Project06Intro";
+import { Vdas02Project07Intro } from "@/components/project/Vdas02Project07Intro";
 import { Vdas01Project02Intro } from "@/components/project/Vdas01Project02Intro";
 import { Vdas01Project03Intro } from "@/components/project/Vdas01Project03Intro";
 import { Vdas01Project04Intro } from "@/components/project/Vdas01Project04Intro";
+import { Vdas01Project05Intro } from "@/components/project/Vdas01Project05Intro";
 import { VdasProjectIntro } from "@/components/project/VdasProjectIntro";
 import { StudentProjectIntro } from "@/components/project/StudentProjectIntro";
 import { StudentProject02Intro } from "@/components/project/StudentProject02Intro";
@@ -26,22 +26,22 @@ import { StudentProject12Intro } from "@/components/project/StudentProject12Intr
 import { StudentProject13Intro } from "@/components/project/StudentProject13Intro";
 import { StudentProject14Intro } from "@/components/project/StudentProject14Intro";
 import { StudentProject15Intro } from "@/components/project/StudentProject15Intro";
-import { eras } from "@/data/eras";
-import { getEra, getProject } from "@/lib/archive";
+import { StudentProject16Intro } from "@/components/project/StudentProject16Intro";
 
 export function generateStaticParams() {
   return [
-    ...eras.flatMap((era) => era.projects.map((project) => ({ slug: era.slug, projectSlug: project.slug }))),
     { slug: "vdas-01", projectSlug: "vdas-01-01" },
     { slug: "vdas-01", projectSlug: "vdas-01-02" },
     { slug: "vdas-01", projectSlug: "vdas-01-03" },
     { slug: "vdas-01", projectSlug: "vdas-01-04" },
+    { slug: "vdas-01", projectSlug: "vdas-01-05" },
     { slug: "vdas-02", projectSlug: "vdas-02-01" },
     { slug: "vdas-02", projectSlug: "vdas-02-02" },
     { slug: "vdas-02", projectSlug: "vdas-02-03" },
     { slug: "vdas-02", projectSlug: "vdas-02-04" },
     { slug: "vdas-02", projectSlug: "vdas-02-05" },
     { slug: "vdas-02", projectSlug: "vdas-02-06" },
+    { slug: "vdas-02", projectSlug: "vdas-02-07" },
     { slug: "when-student-01", projectSlug: "student-01" },
     { slug: "when-student-01", projectSlug: "student-02" },
     { slug: "when-student-01", projectSlug: "student-03" },
@@ -57,6 +57,7 @@ export function generateStaticParams() {
     { slug: "when-student-01", projectSlug: "student-13" },
     { slug: "when-student-01", projectSlug: "student-14" },
     { slug: "when-student-01", projectSlug: "student-15" },
+    { slug: "when-student-01", projectSlug: "student-16" },
     { slug: "when-student-02", projectSlug: "vdas-01-01" },
   ];
 }
@@ -82,6 +83,10 @@ export default function ProjectPage({ params }: { params: { slug: string; projec
     return <Vdas01Project04Intro />;
   }
 
+  if (params.slug === "vdas-01" && params.projectSlug === "vdas-01-05") {
+    return <Vdas01Project05Intro />;
+  }
+
   if (params.slug === "vdas-02" && params.projectSlug === "vdas-02-01") {
     return <Vdas02ProjectIntro />;
   }
@@ -104,6 +109,10 @@ export default function ProjectPage({ params }: { params: { slug: string; projec
 
   if (params.slug === "vdas-02" && params.projectSlug === "vdas-02-06") {
     return <Vdas02Project06Intro />;
+  }
+
+  if (params.slug === "vdas-02" && params.projectSlug === "vdas-02-07") {
+    return <Vdas02Project07Intro />;
   }
 
   if (params.slug === "when-student-01" && params.projectSlug === "student-01") {
@@ -166,9 +175,9 @@ export default function ProjectPage({ params }: { params: { slug: string; projec
     return <StudentProject15Intro />;
   }
 
-  const era = getEra(params.slug);
-  const project = getProject(params.slug, params.projectSlug);
-  if (!era || !project) notFound();
+  if (params.slug === "when-student-01" && params.projectSlug === "student-16") {
+    return <StudentProject16Intro />;
+  }
 
-  return <><div className="px-6 pt-8 md:px-10"><Link href={`/era/${era.slug}`} className="text-sm text-archive-muted hover:text-archive-text">← {era.title}</Link></div><ProjectDetail project={project} /></>;
+  notFound();
 }

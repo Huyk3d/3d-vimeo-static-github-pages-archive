@@ -29,8 +29,8 @@ function ArtworkThumbnail({ className = "" }: { className?: string }) {
 
   return (
     <div className={`relative flex items-center justify-center overflow-hidden bg-black text-sm text-white ${className}`}>
-      <img src={imageSrc} alt="Foundation Study 02 thumbnail" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.015] group-hover:duration-[1900ms]" />
-      <p className="absolute bottom-5 left-5 z-10 text-xs text-white md:bottom-6 md:left-6">Artworks</p>
+      <img src={imageSrc} alt="Vdas Intensive_Artworks thumbnail" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.015] group-hover:duration-[1900ms]" />
+      <p className="absolute bottom-5 left-5 z-10 text-xs text-white md:bottom-6 md:left-6">Vdas Intensive_Artworks</p>
     </div>
   );
 }
@@ -127,7 +127,7 @@ export function VdasGallery() {
             <Link
               href="/era/vdas-01/project/vdas-01-02"
               className="group aspect-video w-full"
-              onPointerEnter={(event) => showCursorLabel("Artworks", event)}
+              onPointerEnter={(event) => showCursorLabel("Vdas Intensive_Artworks", event)}
               onPointerMove={moveCursorLabel}
               onPointerLeave={hideCursorLabel}
             >
