@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import type { PointerEvent, ReactNode } from "react";
+import { useInertialScroll } from "@/hooks/useInertialScroll";
 
 const imageBasePath = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/projects/Student/01-Grad`;
 
@@ -102,19 +103,7 @@ export function StudentGallery() {
     setCursorLabel((current) => ({ ...current, visible: false }));
   };
 
-  useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
-
-    const handleWheel = (event: WheelEvent) => {
-      event.preventDefault();
-      const horizontalDelta = event.deltaX !== 0 ? event.deltaX : event.deltaY;
-      scrollContainer.scrollLeft += horizontalDelta;
-    };
-
-    scrollContainer.addEventListener("wheel", handleWheel, { passive: false });
-    return () => scrollContainer.removeEventListener("wheel", handleWheel);
-  }, []);
+  useInertialScroll(scrollContainerRef);
 
   return (
     <>

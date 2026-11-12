@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { ProjectMediaButton, ProjectVideoThumbnail, useProjectMediaLightbox } from "./ProjectMediaLightbox";
+import { useInertialScroll } from "@/hooks/useInertialScroll";
 
 const imageBasePath = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/projects/Vdas-02/Citizen`;
 const stillNumbers = Array.from({ length: 4 }, (_, index) => index + 1);
@@ -45,18 +46,7 @@ export function Vdas02Project06Intro() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { openMedia, lightbox } = useProjectMediaLightbox(media);
 
-  useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
-
-    const handleWheel = (event: WheelEvent) => {
-      event.preventDefault();
-      scrollContainer.scrollLeft += event.deltaX !== 0 ? event.deltaX : event.deltaY;
-    };
-
-    scrollContainer.addEventListener("wheel", handleWheel, { passive: false });
-    return () => scrollContainer.removeEventListener("wheel", handleWheel);
-  }, []);
+  useInertialScroll(scrollContainerRef);
 
   return (
     <>

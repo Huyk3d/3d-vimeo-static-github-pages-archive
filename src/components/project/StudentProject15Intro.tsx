@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { ProjectVideoThumbnail, useProjectMediaLightbox } from "./ProjectMediaLightbox";
+import { useInertialScroll } from "@/hooks/useInertialScroll";
 
 const media = [{ type: "youtube" as const, src: "https://www.youtube.com/embed/ziCqA2gAtx4?rel=0&modestbranding=1&playsinline=1", title: "친환경 소비 숏폼 공모전 video", thumbnailSrc: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/projects/Student/친환경 숏폼.png`, aspectRatio: "9 / 16" }];
 
@@ -9,18 +10,7 @@ export function StudentProject15Intro() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { openMedia, lightbox } = useProjectMediaLightbox(media);
 
-  useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
-
-    const handleWheel = (event: WheelEvent) => {
-      event.preventDefault();
-      scrollContainer.scrollLeft += event.deltaX !== 0 ? event.deltaX : event.deltaY;
-    };
-
-    scrollContainer.addEventListener("wheel", handleWheel, { passive: false });
-    return () => scrollContainer.removeEventListener("wheel", handleWheel);
-  }, []);
+  useInertialScroll(scrollContainerRef);
 
   return (
     <>

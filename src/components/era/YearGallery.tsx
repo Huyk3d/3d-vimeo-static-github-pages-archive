@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import type { PointerEvent } from "react";
 import type { YearEra, YearProject } from "@/data/yearEras";
+import { useInertialScroll } from "@/hooks/useInertialScroll";
 
 function ProjectCard({ project }: { project: YearProject }) {
   return (
@@ -54,20 +55,10 @@ export function YearGallery({ year }: { year: YearEra }) {
     setCursorLabel((current) => ({ ...current, visible: false }));
   };
 
-  useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
-
-    const handleWheel = (event: WheelEvent) => {
-      event.preventDefault();
-      scrollContainer.scrollLeft += event.deltaX !== 0 ? event.deltaX : event.deltaY;
-    };
-
-    scrollContainer.addEventListener("wheel", handleWheel, { passive: false });
-    return () => scrollContainer.removeEventListener("wheel", handleWheel);
-  }, []);
+  useInertialScroll(scrollContainerRef);
 
   const fullHeight = "h-[calc(100svh-3.5rem)]";
+  const thumbnailStartOffsetClass = ["2024", "2025", "2026"].includes(year.slug) ? "ml-[50px]" : "";
 
   return (
     <>
@@ -80,10 +71,12 @@ export function YearGallery({ year }: { year: YearEra }) {
                 {year.description.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
               </div>
             </section>
-            {year.items.map((item) => {
+            {year.items.map((item, itemIndex) => {
+              const startOffsetClass = itemIndex === 0 ? thumbnailStartOffsetClass : "";
+
               if (item.type === "stack") {
                 return (
-                  <div key={`${item.projects[0].projectSlug}-${item.projects[1].projectSlug}`} className={`flex ${fullHeight} w-[calc((100svh-5rem)*0.8888889)] shrink-0 self-start flex-col gap-6 md:w-[calc((100svh-5.5rem)*0.8888889)] md:gap-8`}>
+                  <div key={`${item.projects[0].projectSlug}-${item.projects[1].projectSlug}`} className={`flex ${fullHeight} w-[calc((100svh-5rem)*0.8888889)] shrink-0 self-start flex-col gap-6 md:w-[calc((100svh-5.5rem)*0.8888889)] md:gap-8 ${startOffsetClass}`}>
                     {item.projects.map((project) => (
                       project.isPlaceholder ? (
                         <div key={project.projectSlug} className="group aspect-video w-full">
@@ -113,7 +106,7 @@ export function YearGallery({ year }: { year: YearEra }) {
                 <Link
                   key={project.projectSlug}
                   href={projectHref(project)}
-                  className={`group ${fullHeight} ${aspectClassName} shrink-0 self-start`}
+                  className={`group ${fullHeight} ${aspectClassName} shrink-0 self-start ${startOffsetClass}`}
                   onPointerEnter={(event) => showCursorLabel(project.title, event)}
                   onPointerMove={moveCursorLabel}
                   onPointerLeave={hideCursorLabel}

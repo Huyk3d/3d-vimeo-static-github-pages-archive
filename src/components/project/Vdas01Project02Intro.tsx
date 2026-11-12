@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { ProjectMediaButton, useProjectMediaLightbox } from "./ProjectMediaLightbox";
+import { useInertialScroll } from "@/hooks/useInertialScroll";
 
 const imageBasePath = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/projects/Vdas-01/01-02_Artworks`;
 
@@ -12,19 +13,7 @@ export function Vdas01Project02Intro() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { openMedia, lightbox } = useProjectMediaLightbox(media);
 
-  useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
-
-    const handleWheel = (event: WheelEvent) => {
-      event.preventDefault();
-      const horizontalDelta = event.deltaX !== 0 ? event.deltaX : event.deltaY;
-      scrollContainer.scrollLeft += horizontalDelta;
-    };
-
-    scrollContainer.addEventListener("wheel", handleWheel, { passive: false });
-    return () => scrollContainer.removeEventListener("wheel", handleWheel);
-  }, []);
+  useInertialScroll(scrollContainerRef);
 
   return (
     <>

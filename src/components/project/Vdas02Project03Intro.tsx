@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { ProjectMediaButton, ProjectVideoThumbnail, useProjectMediaLightbox } from "./ProjectMediaLightbox";
+import { useInertialScroll } from "@/hooks/useInertialScroll";
 
 const imageBasePath = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/projects/Vdas-02/Galaxy S26 Ultra`;
 const imageNumbers = Array.from({ length: 14 }, (_, index) => index + 1);
 const imageGroups = [
   { large: 1 }, { small: [2, 3] }, { large: 4 }, { small: [5, 6] },
   { large: 7 }, { small: [8, 9] }, { large: 10 }, { small: [11, 12] },
-  { large: 13 }, { small: [14] },
+  { large: 13 }, { large: 14 },
 ] as const;
 const video = { type: "vimeo" as const, src: "https://player.vimeo.com/video/1241732169?title=0&byline=0&portrait=0&badge=0&vimeo_logo=0&loop=1", title: "Galaxy S26 Ultra", thumbnailSrc: `${imageBasePath}/Galaxy_11.png`, aspectRatio: "16 / 9" };
 const media = [video, ...imageNumbers.map((number) => ({ type: "image" as const, src: `${imageBasePath}/Galaxy_${String(number).padStart(2, "0")}.png`, alt: `Galaxy S26 Ultra artwork ${number}` }))];
@@ -30,18 +31,7 @@ export function Vdas02Project03Intro() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { openMedia, lightbox } = useProjectMediaLightbox(media);
 
-  useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
-
-    const handleWheel = (event: WheelEvent) => {
-      event.preventDefault();
-      scrollContainer.scrollLeft += event.deltaX !== 0 ? event.deltaX : event.deltaY;
-    };
-
-    scrollContainer.addEventListener("wheel", handleWheel, { passive: false });
-    return () => scrollContainer.removeEventListener("wheel", handleWheel);
-  }, []);
+  useInertialScroll(scrollContainerRef);
 
   return (
     <>

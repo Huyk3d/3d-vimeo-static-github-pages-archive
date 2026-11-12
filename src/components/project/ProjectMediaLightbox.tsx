@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { PointerEvent, ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { projectMediaLightboxStateEvent } from "@/hooks/useInertialScroll";
 
 export type ProjectMediaItem =
   | { type: "image"; src: string; alt: string }
@@ -220,8 +221,21 @@ export function ProjectMediaLightbox({
 export function useProjectMediaLightbox(media: readonly ProjectMediaItem[]) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
+  const openMedia = (index: number) => {
+    window.dispatchEvent(new CustomEvent(projectMediaLightboxStateEvent, {
+      detail: { isOpen: true },
+    }));
+    setActiveIndex(index);
+  };
+
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent(projectMediaLightboxStateEvent, {
+      detail: { isOpen: activeIndex !== null },
+    }));
+  }, [activeIndex]);
+
   return {
-    openMedia: setActiveIndex,
+    openMedia,
     lightbox: (
       <ProjectMediaLightbox
         media={media}

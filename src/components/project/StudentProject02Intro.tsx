@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { ProjectVideoThumbnail, useProjectMediaLightbox } from "./ProjectMediaLightbox";
+import { useInertialScroll } from "@/hooks/useInertialScroll";
 
 const media = [{ type: "vimeo" as const, src: "https://player.vimeo.com/video/1237502996?title=0&byline=0&portrait=0&badge=0&vimeo_logo=0&loop=1", title: "THE NATURE video", thumbnailSrc: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/projects/Student/The nature.png`, aspectRatio: "16 / 9" }];
 
@@ -9,20 +10,7 @@ export function StudentProject02Intro() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { openMedia, lightbox } = useProjectMediaLightbox(media);
 
-  useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
-
-    const handleWheel = (event: WheelEvent) => {
-      event.preventDefault();
-
-      const horizontalDelta = event.deltaX !== 0 ? event.deltaX : event.deltaY;
-      scrollContainer.scrollLeft += horizontalDelta;
-    };
-
-    scrollContainer.addEventListener("wheel", handleWheel, { passive: false });
-    return () => scrollContainer.removeEventListener("wheel", handleWheel);
-  }, []);
+  useInertialScroll(scrollContainerRef);
 
   return (
     <>

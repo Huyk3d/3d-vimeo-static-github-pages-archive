@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import type { PointerEvent } from "react";
+import { useInertialScroll } from "@/hooks/useInertialScroll";
 import Link from "next/link";
 
 function PlaceholderWork({ label, title, className = "" }: { label: string; title?: string; className?: string }) {
@@ -89,19 +90,7 @@ export function VdasGallery() {
     setCursorLabel((current) => ({ ...current, visible: false }));
   };
 
-  useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
-
-    const handleWheel = (event: WheelEvent) => {
-      event.preventDefault();
-      const horizontalDelta = event.deltaX !== 0 ? event.deltaX : event.deltaY;
-      scrollContainer.scrollLeft += horizontalDelta;
-    };
-
-    scrollContainer.addEventListener("wheel", handleWheel, { passive: false });
-    return () => scrollContainer.removeEventListener("wheel", handleWheel);
-  }, []);
+  useInertialScroll(scrollContainerRef);
 
   return (
     <>
